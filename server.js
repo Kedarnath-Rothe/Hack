@@ -23,6 +23,10 @@ const Contact = mongoose.model('Contact', ContactSchema);
 
 mongoose.connect(process.env.MONGODB_URI);
 
+app.get('/', (req,res)=> {
+  res.send("Hello")
+})
+
 app.post('/api/contact', async (req, res) => {
   const { name, email, mobile, message } = req.body;
 
