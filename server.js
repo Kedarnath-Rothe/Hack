@@ -60,14 +60,16 @@ app.post('/api/contact', async (req, res) => {
       }
     });
 
-    const accId = "AC25fd842a858a05b5c7976370ab07fa1e";
-    const authToken = "efb29d5c7d9715fa201edf03368bc5c1";
+    const accId = "AC5a172b72bc34b787d5aa2f7c4c1b59dc";
+    const authToken = "7b57e3c6bb808e956e15d54cbb5ecdd7";
     const client = twilio(accId, authToken);
+
+    console.log("hi");
 
     client.messages.create({
       from: 'whatsapp:+14155238886',
       body: responseMessage,
-      to: `whatsapp:${mobile}`
+      to: `whatsapp:+91${mobile}`
     }).then(message => {
       console.log('WhatsApp message sent:', message.sid);
       res.status(200).send('Message saved, email sent, and WhatsApp message sent');
