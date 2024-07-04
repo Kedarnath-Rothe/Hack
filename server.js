@@ -61,7 +61,7 @@ app.post('/api/contact', async (req, res) => {
     });
 
     const accId = "AC5a172b72bc34b787d5aa2f7c4c1b59dc";
-    const authToken = "7b57e3c6bb808e956e15d54cbb5ecdd7";
+    const authToken = "ce06554ff06f117da41ae49bf154276e";
     const client = twilio(accId, authToken);
 
     console.log("hi");
