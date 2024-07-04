@@ -1,10 +1,10 @@
-
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const nodemailer = require('nodemailer');
 require('dotenv').config();
 const { GoogleGenerativeAI } = require('@google/generative-ai');
+const twilio = require('twilio');
 
 const app = express();
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
@@ -22,10 +22,6 @@ const ContactSchema = new mongoose.Schema({
 const Contact = mongoose.model('Contact', ContactSchema);
 
 mongoose.connect(process.env.MONGODB_URI);
-
-app.get('/', (req,res)=> {
-  res.send("Hello")
-})
 
 app.post('/api/contact', async (req, res) => {
   const { name, email, mobile, message } = req.body;
@@ -61,8 +57,23 @@ app.post('/api/contact', async (req, res) => {
         return res.status(500).send('Error sending email');
       } else {
         console.log('Email sent:', info.response);
-        res.status(200).send('Message saved and email sent');
       }
+    });
+
+    const accId = "AC25fd842a858a05b5c7976370ab07fa1e";
+    const authToken = "efb29d5c7d9715fa201edf03368bc5c1";
+    const client = twilio(accId, authToken);
+
+    client.messages.create({
+      from: 'whatsapp:+14155238886',
+      body: responseMessage,
+      to: `whatsapp:${mobile}`
+    }).then(message => {
+      console.log('WhatsApp message sent:', message.sid);
+      res.status(200).send('Message saved, email sent, and WhatsApp message sent');
+    }).catch(error => {
+      console.error('Error sending WhatsApp message:', error);
+      res.status(500).send('Error sending WhatsApp message');
     });
   } catch (error) {
     console.error('Error:', error);
